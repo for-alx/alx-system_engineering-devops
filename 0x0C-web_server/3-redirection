@@ -1,29 +1,17 @@
 #!/usr/bin/env bash
-# install nginx
-sudo apt-get update
-sudo apt-get -y install nginx
+# Redirection
+apt-get update
+apt-get install -y nginx
+echo "Hello World!" > /var/www/html/index.nginx-debian.html
 
-new_config=\
-"server {
-        listen 80 default_server;
-        listen [::]:80 default_server;
-               root /var/www/html;
-        index index.html index.htm index.nginx-debian.html;
-        server_name _;
-        location / {
-                try_files \$uri \$uri/ =404;
-        }
-        
-        if (\$request_filename ~ redirect_me){
-            rewrite ^ https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;
-        }
-}
-"
+text="server {
+    listen 80;
+    server_name example.com;
 
-echo "$new_config" > /etc/nginx/sites-available/default
-if [ "$(pgrep nginx)" -le 0 ];
-then
-    service nginx start
-else
-    service nginx restart
-fi;
+    location /redirect_me {
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+    }
+}"
+
+echo "${text}" > /etc/nginx/sites-available/default
+service nginx restart
