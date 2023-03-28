@@ -1,10 +1,16 @@
 #!/usr/bin/env bash
-# Redirection
+# Not found page 404
 apt-get update
 apt-get install -y nginx
+echo "Hello World!" > /var/www/html/index.nginx-debian.html
+
 echo $'Ceci n\'est pas une page\n' > /home/ubuntu/404.html
 
+config="#comment \n\tlocation /redirect_me {\n\treturn 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n\t}\n\n"
+
 text="# Comment \n\terror_page 404 /404.html;\n\tlocation = /404.html {\n\t\troot /home/ubuntu;\n\t\tinternal;\n\t}\n\n\n"
+
+sed -i "22 i ${config}" /etc/nginx/sites-available/default
 
 sed -i -e "22 i ${text}" /etc/nginx/sites-enabled/default
 
