@@ -1,19 +1,16 @@
 #!/usr/bin/env bash
 # Redirection
-apt-get update
-apt-get install -y nginx
-echo "Hello World!" > /var/www/html/index.nginx-debian.html
+# apt-get update
+# apt-get install -y nginx
+# echo $'Ceci n\'est pas une page\n' > /home/ubuntu/404.html
 
-text="server {
-    listen 80;
-    server_name example.com;
+text="error_page 404 /404.html;
+        location = /404.html {
+                root /home/ubuntu;
+                internal;
+        }"
 
-    location /redirect_me {
-        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
-    }
-}"
-
-echo "${text}" > /etc/nginx/sites-available/default
-
-echo "new code"
-service nginx restart
+#echo "${text}" > /etc/nginx/sites-available/default
+sed '21 i ${text}' sample.txt
+# echo "new code"
+# service nginx restart
