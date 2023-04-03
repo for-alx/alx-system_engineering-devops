@@ -23,7 +23,7 @@ exec {'header':
     provider => 'shell'
 }
 
-service {'restart nginx':
+service {'nginx':
     ensure => running,
     require => Package['nginx']
 }
