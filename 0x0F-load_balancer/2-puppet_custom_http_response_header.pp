@@ -18,12 +18,12 @@ exec {'redirect':
     provider => 'shell'
 }
 
-exec {'HTTP header':
+exec {'header':
     command => 'sed -i "25i\    add_header X-Served-By \$hostname;" /etc/nginx/sites-available/default',
     provider => 'shell'
 }
 
-service {'nginx':
+service {'restart nginx':
     ensure => running,
     require => Package['nginx']
 }
