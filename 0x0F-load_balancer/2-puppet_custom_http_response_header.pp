@@ -15,20 +15,6 @@ file { 'Nginx configration':
   path    => '/etc/nginx/sites-enabled/default',
   content =>
 "server {
-    # Robot added==============================
-        location /redirect_me {
-        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
-        }
-
-        error_page 404 /404.html;
-        location = /404.html {
-                root /var/www/html;
-                internal;
-        }
-    # Add end======================================
-
-
-
     listen 80 default_server;
     listen [::]:80 default_server;
 
@@ -44,14 +30,14 @@ file { 'Nginx configration':
         # as directory, then fall back to displaying a 404.
 
         # Robot added==================================
-        add_header X-Served-By {hostname};
+        add_header X-Served-By \$hostname;
         # Add end======================================
         try_files \$uri \$uri/ =404;
     }
 }",
 }
 
-service {'nginx':
+service {'restart nginx':
     ensure  => running,
     require => Package['nginx']
 }
