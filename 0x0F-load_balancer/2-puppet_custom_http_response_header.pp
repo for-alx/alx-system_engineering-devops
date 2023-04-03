@@ -18,6 +18,11 @@ exec {'HTTP header':
     provider => 'shell'
 }
 
+exec {'redirect_me':
+    command => 'sed -i "24i\    rewrite ^/redirect_me https://th3-gr00t.tk/ permanent;" /etc/nginx/sites-available/default',
+    provider => 'shell'
+}
+
 service {'nginx':
     ensure => running,
     require => Package['nginx']
