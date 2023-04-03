@@ -13,8 +13,8 @@ file {'/var/www/html/index.html':
     content => 'Hello World!'
 }
 
-exec {'redirect_me':
-    command => 'sed -i "24i\    rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;" /etc/nginx/sites-available/default',
+exec {'redirect':
+    command => 'sed -i "24i\    rewrite ^/redirect_me https://th3-gr00t.tk/ permanent;" /etc/nginx/sites-available/default',
     provider => 'shell'
 }
 
@@ -23,7 +23,7 @@ exec {'header':
     provider => 'shell'
 }
 
-service {'nginx':
+service {'restart nginx':
     ensure => running,
     require => Package['nginx']
 }
