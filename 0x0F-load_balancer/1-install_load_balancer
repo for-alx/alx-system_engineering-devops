@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Install your load balancer
 # Resource: https://www.stackpath.com/blog/load-balancing-haproxy
-# 			https://youtu.be/tl8movPZbJM
+#           https://youtu.be/tl8movPZbJM
 # /etc/default/haproxy
 # /etc/haproxy/haproxy.cfg
 
@@ -27,7 +27,6 @@ frontend http
      
     default_backend web-backend
 "
-
 
 echo "${config}" >> /etc/haproxy/haproxy.cfg
 
