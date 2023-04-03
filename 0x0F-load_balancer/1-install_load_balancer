@@ -16,13 +16,14 @@ echo "ENABLED=1" >> /etc/default/haproxy
 config="
 backend web-backend
     balance roundrobin
-    mode http
+    mode tcp
+
     server web1 52.207.157.20:80 check
     server web2 54.175.3.48:80 check
 
 frontend http
     bind *:80
-    mode http
+    mode tcp
      
     default_backend web-backend
 "
