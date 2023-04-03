@@ -5,7 +5,7 @@ exec { 'update':
 }
 
 package { 'nginx':
-    ensure => 'installed',
+    ensure  => 'installed',
     require => Exec['update']
 }
 
@@ -18,13 +18,12 @@ exec {'redirect':
     provider => 'shell'
 }
 
-exec {'header':
-    command => 'sed -i "25i\    add_header X-Served-By \$hostname;" /etc/nginx/sites-available/default',
+exec {'HTTP header':
+    command  => 'sed -i "25i\   add_header X-Served-By \$hostname;" /etc/nginx/sites-available/default',
     provider => 'shell'
 }
 
-
-service {'nginx':
+service {'restart nginx':
     ensure => running,
     require => Package['nginx']
 }
