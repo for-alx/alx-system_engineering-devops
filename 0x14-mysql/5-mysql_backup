@@ -5,7 +5,7 @@ today=$(date +"%d")
 month=$(date +"%m")
 
 year=$(date +"%Y")
-file_name="$today-$month-$year.tar.gz"
+full_file_name="$today-$month-$year.tar.gz"
 
 mysqldump --all-databases -u root --password="$1" > backup.sql
-tar -czvf "$file_name" backup.sql
+tar -czvf "$full_file_name" backup.sql
