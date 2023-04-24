@@ -1,7 +1,5 @@
 #!/usr/bin/python3
-"""
-Docs
-"""
+""" Gather data from an API """
 import requests
 import sys
 
