@@ -3,41 +3,43 @@
 import requests
 
 
-def count_words(subreddit, word_list, word_count=None, after=None):
+def count_words(subreddit, word_list, word_count={}, after=None):
     """ queries the Reddit API """
-    if not word_count:
-        word_count = {}
-
-    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
-    headers = {"User-Agent": "Mozilla/5.0"}
-
-    params = {"limit": 100}
-    if after:
-        params["after"] = after
-
-    response = requests.get(url, headers=headers, params=params)
-    if response.status_code != 200:
-        return
-
-    data = response.json()["data"]
-    after = data["after"]
-    articles = data["children"]
-
-    for article in articles:
-        title = article["data"]["title"].lower()
-        for word in word_list:
-            if (f" {word.lower()} " in f" {title} " or
-                    title.startswith(f"{word.lower()} ") or
-                    title.endswith(f" {word.lower()}") or
-                    title == f"{word.lower()}"):
-                if word.lower() in word_count:
-                    word_count[word.lower()] += 1
-                else:
-                    word_count[word.lower()] = 1
-
-    if not after:
-        sorted_words = sorted(word_count.items(), key=lambda x: (-x[1], x[0]))
-        for word, count in sorted_words:
-            print(f"{word}: {count}")
+    if word_count == {}:
+        word_count = {word.lower(): 0 for word in word_list}
     else:
-        count_words(subreddit, word_list, word_count, after)
+        word_count = {k.lower(): v for k, v in word_count.items()}
+
+    sub_info = requests.get("https://www.reddit.com/r/{}/hot.json"
+                            .format(subreddit),
+                            params={"after": after},
+                            headers={"User-Agent": "My-User-Agent"},
+                            allow_redirects=False)
+
+    if sub_info.status_code != 200:
+        return None
+
+    info = sub_info.json()
+
+    hot_l = [child.get("data").get("title").lower()
+             for child in info.get("data").get("children")]
+
+    for title in hot_l:
+        split_words = title.split()
+        for word in word_list:
+            if (word in split_words) and not any([
+                split_word.startswith(word) and
+                split_word[len(word):].isalnum()
+                for split_word in split_words
+            ]):
+                word_count[word.lower()] += split_words.count(word)
+
+    if not info.get("data").get("after"):
+        sorted_counts = sorted(word_count.items(),
+                               key=lambda kv: (-kv[1], kv[0]))
+        for k, v in sorted_counts:
+            if v > 0:
+                print('{}: {}'.format(k, v))
+    else:
+        return count_words(subreddit, word_list, word_count,
+                           info.get("data").get("after"))
