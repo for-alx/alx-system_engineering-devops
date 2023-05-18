@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 # No service interruption reload Gunicorn in a graceful way
 # Source: https://stackoverflow.com/questions/9881819/a-better-way-to-restart-reload-gunicorn-via-upstart-after-git-pulling-my-dja
-pkill -HUP gunicorn
+ps aux |grep gunicorn |grep projectname | awk '{ print $2 }' |xargs kill -HUP
